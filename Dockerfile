@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     vim \
     gnupg \
+    wget \
+    systemctl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | apt-key add -
