@@ -20,13 +20,14 @@ if __name__ == "__main__":
     print("-----PODSUMOWANIE-----")
 
     text_to_send = f"""
-    W kilku zdaniach opowiedz mi co myslisz o pewnym filmie, nie pisz nic wiecej,
+    W kilku zdaniach opowiedz mi co myslisz o pewnym filmie,
     możesz jeszcze podzielić się wrażeniami twórcy, czy jest pozytywnie czy negatywnie nastawiony,
     odpowiedź zacznij słowami 'Ten film opowiada/jest o'
-    Wiemy ze film ma tagi: {final_audio_details["tags"]}
-    Wiemy ze opis filmu to: {final_audio_details["title"]}
-    Na początku filmu autor powiedział: {final_audio_details["first_words"]}
-    Na koncu filmu autor powiedział: {final_audio_details["last_words"]}
+    Wiemy ze film ma tagi: {final_audio_details["tags"]}.
+    Wiemy ze opis filmu to: {final_audio_details["title"]}.
+    Na początku filmu autor powiedział: {final_audio_details["first_words"]}.
+    W trakcie filmu padają zdania: {final_audio_details["middle_words"]}.
+    Na koncu filmu autor powiedział: {final_audio_details["last_words"]}.
     Jeśli nie możesz nic powiedzieć o filmie, napisz, że film ma za mało informacji żeby go opisać
     """
 
