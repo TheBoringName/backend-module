@@ -1,6 +1,6 @@
 import pymongo
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient("mongodb://root:rootpassword@db:27017/")
 
 db = client["db"]
 video = db["Video"]
