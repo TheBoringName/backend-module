@@ -1,5 +1,7 @@
 import pymongo
 
+# PATTERN
+# "mongodb://your_mongo_username:your_mongo_password@database_container:27017/your_database_name"
 client = pymongo.MongoClient("mongodb://root:rootpassword@db:27017/")
 
 db = client["db"]
