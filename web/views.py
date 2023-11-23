@@ -17,14 +17,12 @@ def upload():
     return response
 
 
-
-
 @bp.route("/find", methods=["GET"])
 def find_results_by_title():
-    # args = request.args
-    # results = db.get_search_results(args.get("title"))
-    # return parse_json(results)
-    return "Hello fucker"
+    args = request.args
+    results = db.get_search_results(args.get("title"))
+    return parse_json(results)
+    # return "Hello"
 
 
 def parse_json(data):

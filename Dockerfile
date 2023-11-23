@@ -2,8 +2,6 @@ FROM ubuntu:20.04
 
 ARG TZ=Europe/Warsaw
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-
 RUN apt-get update && apt-get install -y \
     python3.8 \
     python3-pip \
@@ -19,10 +17,21 @@ RUN echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mon
 RUN apt-get update && apt-get install -y mongodb-org
 RUN systemctl enable mongod
 
-WORKDIR /app
 
-COPY . /app/
+FROM python:3.11-slim-bullseye
 
-RUN pip3 install -r requirements.txt
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONPATH=/backend-module:/backend-module/web
+ENV FLASK_APP=app
 
-CMD ["python3", "functions/session.py"]
+COPY . /backend-module
+
+WORKDIR /backend-module
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt 
+
+WORKDIR /pwse/backend
+
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+# # CMD ["python3", "functions/session.py"]
