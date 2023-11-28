@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from bson import json_util
 from flask import Blueprint, request
@@ -23,7 +24,17 @@ def upload():
     # response = {'summary_score': dummy_returner.summary_score, 'summary_text': dummy_returner.summary_text,
     #             'timestamp_generated': str(dummy_returner.timestamp_generated), 'video_id': str(video_id)}
     # db.create_result_record(parse_json(response))
-    return response
+    # TODO: Test for other sources
+    return {
+        "title": audio_details["title"],
+        "author": audio_details["author"],
+        "published": audio_details["published"],
+        "length": audio_details["length"],
+        "type": audio_details["type"],
+        "url": audio_details["url"],
+        "analysis": response,
+        "analysis_time": datetime.now()
+    }
 
 
 @bp.route("/find", methods=["GET"])

@@ -46,6 +46,9 @@ def download_audio_from_youtube(video_url):
         video_details["tags"] = ytube.keywords
         video_details["title"] = ytube.title
 
+    video_details["author"] = ytube.author
+    video_details["length"] = ytube.length
+    video_details["published"] = ytube.publish_date
     video_details["type"] = "YouTube"
 
     video = video_filter.download(output_path="/tmp")
