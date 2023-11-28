@@ -1,17 +1,34 @@
-from pytube import YouTube
-from pydub import AudioSegment
 import os
-import uuid
-import tiktok_lib.python_tiktok as pyk
 import re
-from instagrapi import Client
+import uuid
+
 from dotenv import load_dotenv
+from instagrapi import Client
+from pydub import AudioSegment
+from pytube import YouTube
+
+import functions.tiktok_lib.python_tiktok as pyk
 
 load_dotenv()
 
-#------------------------------------#
+
+def download_audio(source, video_url):
+    match source:
+        case "YouTube":
+            return download_audio_from_youtube(video_url)
+        case "Instagram":
+            return download_audio_from_instagram(video_url)
+        case "TikTok":
+            return download_audio_from_tiktok(video_url)
+        case "Local":
+            return upload_audio_from_local(video_url)
+        case _:
+            raise ValueError("Invalid source")
+
+
+# ------------------------------------#
 #       YOUTUBE DOWNLOAD AUDIO       #
-#------------------------------------#
+# ------------------------------------#
 
 def download_audio_from_youtube(video_url):
     video_details = {}
@@ -19,7 +36,8 @@ def download_audio_from_youtube(video_url):
 
     ytube = YouTube(video_url)
 
-    video_filter = ytube.streams.filter(progressive=True, type='video', file_extension='mp4').order_by('resolution').desc().first()
+    video_filter = ytube.streams.filter(progressive=True, type='video', file_extension='mp4').order_by(
+        'resolution').desc().first()
 
     if "shorts" in video_url:
         video_details["tags"] = re.findall(r'#\w+', ytube.title)
@@ -36,10 +54,9 @@ def download_audio_from_youtube(video_url):
     return video_details
 
 
-
-#------------------------------------#
+# ------------------------------------#
 #        TIKTOK DOWNLOAD AUDIO       #
-#------------------------------------#
+# ------------------------------------#
 
 def download_audio_from_tiktok(video_url):
     video_details = {}
@@ -62,19 +79,18 @@ def download_audio_from_tiktok(video_url):
     video_mp4_name = f"{username}_{type}_{video_id}.mp4"
 
     video_details["audio_name"] = convert_mp4_to_wav(video_mp4_name)
-    
+
     return video_details
 
 
-
-#------------------------------------#
+# ------------------------------------#
 #      INSTAGRAM DOWNLOAD AUDIO      #
-#------------------------------------#
+# ------------------------------------#
 
 def download_audio_from_instagram(video_url):
     video_details = {}
     video_details["url"] = video_url
-    
+
     cl = Client()
     cl.login(os.getenv("IG_USERNAME"), os.getenv("IG_PASSOWRD"))
 
@@ -94,10 +110,9 @@ def download_audio_from_instagram(video_url):
     return video_details
 
 
-
-#------------------------------------#
+# ------------------------------------#
 #         LOCAL UPLOAD AUDIO         #
-#------------------------------------#
+# ------------------------------------#
 
 def upload_audio_from_local(video_path):
     video_details = {}
@@ -108,10 +123,9 @@ def upload_audio_from_local(video_path):
     return video_details
 
 
-
-#------------------------------------#
+# ------------------------------------#
 #        VIDEO-AUDIO CONVERTER       #
-#------------------------------------#
+# ------------------------------------#
 
 def convert_mp4_to_wav(video_path):
     wav_name = "/tmp/" + str(uuid.uuid4()) + ".wav"
