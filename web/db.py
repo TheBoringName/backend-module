@@ -27,12 +27,28 @@ def find_result_by_video_id(id):
     return result.find({"video_id": id})
 
 
+def get_single_page(number):
+    list = []
+    for x in video.find().skip(10 * (int(number) - 1)).limit(10):
+        print(x)
+        for y in find_result_by_video_id(str(x['_id'])):
+            del x['_id']
+            del y['_id']
+            del y['video_id']
+            x.update(y)
+            list.append(x)
+    return list
+
+
 def get_search_results(title):
     list = []
     for x in find_videos_by_name(title):
         for y in find_result_by_video_id(str(x['_id'])):
+            del x['_id']
             del y['_id']
-            list.append(y)
+            del y['video_id']
+            x.update(y)
+            list.append(x)
     return list
 
 

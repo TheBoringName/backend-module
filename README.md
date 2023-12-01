@@ -58,12 +58,12 @@ For now, full text analysis is performed by the GPT-3.5 engine. Script sends to 
 
 - Build image:
 ```
-docker build -t <name>:<tag> .
+docker compose build
 ```
 
 - Run container:
 ```
-docker run <name>:<tag>
+docker compose up
 ```
 
 - Access to container:

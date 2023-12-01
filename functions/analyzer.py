@@ -28,6 +28,7 @@ def analyze_text_via_gpt(audio_details):
             Na początku filmu autor powiedział: {audio_details["first_words"]}.
             W trakcie filmu padają zdania: {audio_details["middle_words"]}.
             Na koncu filmu autor powiedział: {audio_details["last_words"]}.
+            Oceń film od 1 do 100
             Jeśli nie możesz nic powiedzieć o filmie, napisz, że film ma za mało informacji żeby go opisać
             """
 
