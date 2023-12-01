@@ -17,8 +17,8 @@ def upload():
     audio_details = dwn.download_audio(request.json["source"], request.json["url"])
     video_data = {
         "title": audio_details["title"],
-        "duration": audio_details["length"],
-        "publication_date": str(audio_details["published"]),
+        # "duration": audio_details["length"],
+        # "publication_date": str(audio_details["published"]),
         "source": request.json["source"],
         "url": request.json["url"]
     }

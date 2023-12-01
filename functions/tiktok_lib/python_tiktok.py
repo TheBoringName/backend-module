@@ -24,7 +24,7 @@ runsb_err = 'No browser defined for cookie extraction. We strongly recommend you
 
 def get_tiktok_json(video_url):
     global cookies
-    with open('tiktok_lib/cookies.pkl', 'rb') as file:
+    with open('functions/tiktok_lib/cookies.pkl', 'rb') as file:
         cookies = dill.load(file)
 
     tt = requests.get(video_url,
@@ -43,7 +43,7 @@ def get_tiktok_json(video_url):
 
 def save_tiktok(video_url):
     global cookies
-    with open('tiktok_lib/cookies.pkl', 'rb') as file:
+    with open('functions/tiktok_lib/cookies.pkl', 'rb') as file:
         cookies = dill.load(file)
 
     tt_json = get_tiktok_json(video_url)

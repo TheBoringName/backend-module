@@ -25,7 +25,6 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    cors = CORS(app, resource={r"/*":{"origins":"*"}})
-    app.config["CORS_HEADERS"] = "Content-Type"
+    CORS(app)
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
     app.run(debug=True)
