@@ -8,11 +8,13 @@ import db
 import functions.analyzer as an
 import functions.audio_to_text as att
 import functions.uploader as dwn
+from flask_cors import cross_origin
 
 bp = Blueprint("bp", __name__)
 
 
 @bp.route("/describe", methods=["POST"])
+@cross_origin()
 def upload():
     audio_details = dwn.download_audio(request.json["source"], request.json["url"])
     video_data = {
@@ -39,6 +41,7 @@ def upload():
 
 
 @bp.route("/find", methods=["GET"])
+@cross_origin()
 def find_results_by_title():
     args = request.args
     results = db.get_search_results(args.get("title"))
@@ -46,6 +49,7 @@ def find_results_by_title():
 
 
 @bp.route("/history", methods=["GET"])
+@cross_origin()
 def get_history():
     args = request.args
     results = db.get_single_page(args.get("page"))
