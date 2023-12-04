@@ -23,6 +23,14 @@ services:
       - "host.docker.internal:host-gateway"
     links:
       - mongodb_container
+  frontend:
+    build:
+      context: ../frontend-module
+      dockerfile: Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - '3000:3000'
 
 volumes:
   mongodb_data:
