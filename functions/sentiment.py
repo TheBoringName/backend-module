@@ -15,7 +15,7 @@ def sentiment_analyze_via_azure(audio_details):
     neutral = 0.0
     negative = 0.0
 
-    if "text" in audio_details:
+    if  audio_details["text"] != "":
         result = text_analytics_client.analyze_sentiment(audio_details["text"], show_opinion_mining=True)
         positive = float(result.confidence_scores.positive)
         neutral = float(result.confidence_scores.neutral)
@@ -26,12 +26,10 @@ def sentiment_analyze_via_azure(audio_details):
         result = text_analytics_client.analyze_sentiment(all_text, show_opinion_mining=True)
         texts = [text for text in result if not text.is_error]
 
-        for text in enumerate(texts):
+        for idx, text in enumerate(texts):
             positive += float(text.confidence_scores.positive)
             neutral += float(text.confidence_scores.neutral)
             negative += float(text.confidence_scores.negative)
-
-
 
     if positive > neutral and positive > negative:
         return "positive"
@@ -39,6 +37,3 @@ def sentiment_analyze_via_azure(audio_details):
         return "negative"
     else:
         return "neutral"
-
-
-
