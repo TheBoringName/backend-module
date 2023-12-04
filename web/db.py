@@ -40,6 +40,19 @@ def get_single_page(number):
     return list
 
 
+def get_history_list(size):
+    list = []
+    for x in video.find().limit(int(size)):
+        print(x)
+        for y in find_result_by_video_id(str(x['_id'])):
+            del x['_id']
+            del y['_id']
+            del y['video_id']
+            x.update(y)
+            list.append(x)
+    return list
+
+
 def get_search_results(title):
     list = []
     for x in find_videos_by_name(title):

@@ -56,5 +56,13 @@ def get_history():
     return parse_json(results)
 
 
+@bp.route("/history/list", methods=["GET"])
+@cross_origin()
+def get_history_list():
+    args = request.args
+    results = db.get_history_list(args.get("size"))
+    return parse_json(results)
+
+
 def parse_json(data):
     return json.loads(json_util.dumps(data))
