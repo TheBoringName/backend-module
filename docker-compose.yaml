@@ -21,6 +21,8 @@ services:
       dockerfile: "Dockerfile"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    environment:
+      PYTHONUNBUFFERED: 1
     links:
       - mongodb_container
 
