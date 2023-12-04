@@ -22,21 +22,23 @@ def upload():
         # "duration": audio_details["length"],
         # "publication_date": str(audio_details["published"]),
         "source": request.json["source"],
-        "url": request.json["url"]
+        "url": request.json["url"],
     }
     video_id = str(db.add_new_video(video_data))
     audio_extend_details = att.split_audio_to_chunks(audio_details)
     final_audio_details = an.analyze_text_via_gpt(audio_extend_details)
-    response = final_audio_details['gpt_response']
+    response = final_audio_details["gpt_response"]
+    score = final_audio_details["gpt_score"]
     result = {
         "video_id": video_id,
         "analysis": response,
-        "analysis_date": str(datetime.now())
+        "score": score,
+        "analysis_date": str(datetime.now()),
     }
     db.create_result_record(parse_json(result))
     video_data.update(result)
-    del video_data['_id']
-    del video_data['video_id']
+    del video_data["_id"]
+    del video_data["video_id"]
     return video_data
 
 
