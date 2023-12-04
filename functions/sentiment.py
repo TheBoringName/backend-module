@@ -24,7 +24,7 @@ def sentiment_analyze_via_azure(audio_details):
     else:
         all_text = [audio_details["first_words"], audio_details["middle_words"],  audio_details["last_words"]]
         result = text_analytics_client.analyze_sentiment(all_text, show_opinion_mining=True)
-        texts = [doc for doc in result if not doc.is_error]
+        texts = [text for text in result if not text.is_error]
 
         for text in enumerate(texts):
             positive += text.confidence_scores.positive
