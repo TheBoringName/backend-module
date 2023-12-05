@@ -14,12 +14,11 @@ def sentiment_analyze_via_azure(audio_details):
     positive = 0.0
     neutral = 0.0
     negative = 0.0
-
     if  audio_details["text"] != "":
-        result = text_analytics_client.analyze_sentiment(audio_details["text"], show_opinion_mining=True)
-        positive = float(result.confidence_scores.positive)
-        neutral = float(result.confidence_scores.neutral)
-        negative = float(result.confidence_scores.negative)
+        result = text_analytics_client.analyze_sentiment([audio_details["text"]], show_opinion_mining=True)
+        positive = float(result[0].confidence_scores.positive)
+        neutral = float(result[0].confidence_scores.neutral)
+        negative = float(result[0].confidence_scores.negative)
 
     else:
         all_text = [audio_details["first_words"], audio_details["middle_words"],  audio_details["last_words"]]
