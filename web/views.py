@@ -8,6 +8,7 @@ import db
 import functions.analyzer as an
 import functions.audio_to_text as att
 import functions.uploader as dwn
+import functions.sentiment as st
 from flask_cors import cross_origin
 
 bp = Blueprint("bp", __name__)
@@ -17,16 +18,19 @@ bp = Blueprint("bp", __name__)
 @cross_origin()
 def upload():
     audio_details = dwn.download_audio(request.json["source"], request.json["url"])
+    audio_extend_details = att.split_audio_to_chunks(audio_details)
+    final_audio_details = an.analyze_text_via_gpt(audio_extend_details)
+    sentiment_value = st.sentiment_analyze_via_azure(audio_extend_details)
+
     video_data = {
         "title": audio_details["title"],
         # "duration": audio_details["length"],
         # "publication_date": str(audio_details["published"]),
         "source": request.json["source"],
-        "url": request.json["url"]
+        "url": request.json["url"],
+        "sentiment": sentiment_value
     }
     video_id = str(db.add_new_video(video_data))
-    audio_extend_details = att.split_audio_to_chunks(audio_details)
-    final_audio_details = an.analyze_text_via_gpt(audio_extend_details)
     response = final_audio_details['gpt_response']
     result = {
         "video_id": video_id,

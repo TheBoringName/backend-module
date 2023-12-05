@@ -1,6 +1,7 @@
 import analyzer as an
 import audio_to_text as att
 import uploader as dwn
+import sentiment as st
 
 if __name__ == "__main__":
     video_type = input("Wybierz skąd pochodzi film:\n  1] Youtube\n  2] Instagram\n  3] TikTok\n  4] Lokalny Plik\n[Wybierz 1-4]: ")
@@ -37,7 +38,9 @@ if __name__ == "__main__":
     print("\n")
     print("Rozpoczynam analize tekstową filmu...")
     audio_extend_details = att.split_audio_to_chunks(audio_details)
+    sentiment_value = st.sentiment_analyze_via_azure(audio_extend_details)
     print("Analiza tekstowa filmu zakończona")
+    print(f"Film jest: {sentiment_value}")
     print("\n")
     print("Wysłanie informacji do GPT-3.5...")
     final_audio_details = an.analyze_text_via_gpt(audio_extend_details)
