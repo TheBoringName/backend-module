@@ -1,7 +1,8 @@
 import os
 import re
 import uuid
-
+import base64
+import io
 from dotenv import load_dotenv
 from instagrapi import Client
 from pydub import AudioSegment
@@ -132,7 +133,8 @@ def upload_audio_from_local(video_path):
 
 def convert_mp4_to_wav(video_path):
     wav_name = "/tmp/" + str(uuid.uuid4()) + ".wav"
-    audio = AudioSegment.from_file(video_path, format="mp4")
+    binary_audio = base64.b64decode(video_path)
+    audio = AudioSegment.from_file(io.BytesIO(binary_audio), format="mp4")
     audio = audio.set_channels(1)
     audio.export(wav_name, format="wav")
 
