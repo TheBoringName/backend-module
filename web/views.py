@@ -5,11 +5,15 @@ from bson import json_util
 from flask import Blueprint, request
 
 import db
+import uuid
+import io
+import base64
 import functions.analyzer as an
 import functions.audio_to_text as att
 import functions.uploader as dwn
 import functions.sentiment as st
 from flask_cors import cross_origin
+from pydub import AudioSegment
 
 bp = Blueprint("bp", __name__)
 
@@ -23,11 +27,9 @@ def upload():
     sentiment_value = st.sentiment_analyze_via_azure(audio_extend_details)
 
     video_data = {
-        "title": audio_details["title"],
-        # "duration": audio_details["length"],
-        # "publication_date": str(audio_details["published"]),
+        "title": audio_details["title"] if "title" in audio_details else "Title not found",
         "source": request.json["source"],
-        "url": request.json["url"],
+        "url": "Local" if request.json["source"] == "Local" else request.json["url"],
         "sentiment": sentiment_value
     }
     video_id = str(db.add_new_video(video_data))
