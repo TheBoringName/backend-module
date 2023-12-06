@@ -1,6 +1,8 @@
 import os
 import re
 import uuid
+import base64
+import io
 
 from dotenv import load_dotenv
 from instagrapi import Client
@@ -119,9 +121,8 @@ def download_audio_from_instagram(video_url):
 
 def upload_audio_from_local(video_path):
     video_details = {}
-    video_details["url"] = video_path
     video_details["type"] = "Local"
-    video_details["audio_name"] = convert_mp4_to_wav(video_path)
+    video_details["audio_name"] = convert_base64_mp4_to_wav(video_path)
 
     return video_details
 
@@ -130,11 +131,26 @@ def upload_audio_from_local(video_path):
 #        VIDEO-AUDIO CONVERTER       #
 # ------------------------------------#
 
+
 def convert_mp4_to_wav(video_path):
     wav_name = "/tmp/" + str(uuid.uuid4()) + ".wav"
     audio = AudioSegment.from_file(video_path, format="mp4")
     audio = audio.set_channels(1)
     audio.export(wav_name, format="wav")
 
-    os.remove(video_path)
+    if os.path.exists(video_path):
+        os.remove(video_path)
+    return wav_name
+
+
+def convert_base64_mp4_to_wav(video_path):
+    wav_name = "/tmp/" + str(uuid.uuid4()) + ".wav"
+    binary_audio = base64.b64decode(video_path)
+    audio = AudioSegment.from_file(io.BytesIO(binary_audio), format="mp4")
+    audio = audio.set_channels(1)
+    audio.export(wav_name, format="wav")
+
+    if os.path.exists(video_path):
+        os.remove(video_path)
+
     return wav_name
