@@ -39,7 +39,7 @@ Script fetches video from user's chosen option. Then video is converted to audio
 
 ### Video downloading
 
-Backend allows to download videos from several platfroms:
+Backend allows to download videos from several platfoms:
 - Youtube
 - Tiktok
 - Instagram
@@ -62,6 +62,58 @@ Using the Azure AI Language module, script sends words spoken in the intro, duri
 
 ### Text analysis
 For now, full text analysis is performed by the GPT-3.5 engine. Script sends to GPT information about the video tags, name, words spoken in the intro, during and at the end of video. We also limit and filter his statements.
+
+### Backend Written in FLASK
+For integration with website, API has been prepared using the FLASK framework.
+
+### Backend Requests
+Currently, we are using 3 different endpoints:
+
+```
+/describe
+```
+Allows to send video for the analysis. Request body:
+```
+"source": "Local/YouTube/TikTok/Instagram"
+"url": "<VIDEO_URL>"
+```
+If the video source is set to local, URL also has to be set to local
+
+```
+/find?title=<SEARCHED_VIDEO_TITLE>
+```
+Allows to find analyzed video by title. No request body
+
+
+```
+/find?page=<PAGE_NUMBER>
+```
+Allows to retrieve all records from db, paged. 10 entries for one page. No request body
+
+
+### Backend Responses
+Responses for each endpoint are the same, concatenating the most important request from database.
+Example response:
+```
+{
+    "analysis": "Ten film opowiada o historii Polski, 
+    skupiając się na jej trudnościach i przetrwaniu. 
+    Przedstawione są cztery powody, dlaczego mamy tendencję 
+    do skupiania się na trudnościach Polski w XX wieku.
+    Film opowiada również o roli Polski jako "siatki siatkówki"
+    Europy i analizuje współdziałanie z Litwą. 
+    Pojawiają się informacje o średniowieczu i rozbiorach Polski,
+    a także o znaczeniu wyboru Karola Wojtyły na papieża dla Polski.
+    Film kończy się ostatecznie opisem Polski jako kraju,
+    który przeszedł przez wiele trudności, 
+    ale jest w stanie się od nich odbudować.",
+    "analysis_date": "2023-12-07 21:29:02.174675",
+    "sentiment": "negative",
+    "source": "YouTube",
+    "title": "History Summarized: Poland",
+    "url": "https://www.youtube.com/watch?v=pJmSl148p_I"
+}
+```
 
 ### Requirements for Docker
 
