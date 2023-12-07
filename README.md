@@ -67,7 +67,7 @@ For now, full text analysis is performed by the GPT-3.5 engine. Script sends to 
 For integration with website, API has been prepared using the FLASK framework.
 
 ### Backend Requests
-Currently, we are using 3 different endpoints:
+Currently, we are using 4 different endpoints:
 
 ```
 /describe
@@ -77,19 +77,29 @@ Allows to send video for the analysis. Request body:
 "source": "Local/YouTube/TikTok/Instagram"
 "url": "<VIDEO_URL>"
 ```
-If the video source is set to local, URL also has to be set to local
+Note: If the video source is set to local, URL also has to be set to local
+
+<br>
 
 ```
 /find?title=<SEARCHED_VIDEO_TITLE>
 ```
 Allows to find analyzed video by title. No request body
 
+<br>
 
 ```
-/find?page=<PAGE_NUMBER>
+/history?page=<PAGE_NUMBER>
 ```
 Allows to retrieve all records from db, paged. 10 entries for one page. No request body
 
+<br>
+
+```
+/history/list?size=<LIST_SIZE>
+```
+Allows to retrieve any number of records from database
+<br>
 
 ### Backend Responses
 Responses for each endpoint are the same, concatenating the most important request from database.
