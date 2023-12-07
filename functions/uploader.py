@@ -2,6 +2,7 @@ import os
 import re
 import uuid
 import base64
+import pyotp
 import io
 
 from dotenv import load_dotenv
@@ -96,8 +97,9 @@ def download_audio_from_instagram(video_url):
     video_details = {}
     video_details["url"] = video_url
 
+
     cl = Client()
-    cl.login(os.getenv("IG_USERNAME"), os.getenv("IG_PASSOWRD"))
+    cl.login(username=os.getenv("IG_USERNAME"), password=os.getenv("IG_PASSOWRD"), verification_code=pyotp.TOTP(os.getenv("IG_KEY")).now())
 
     video_data = cl.media_pk_from_url(video_url)
     video_info = cl.media_info(video_data)
