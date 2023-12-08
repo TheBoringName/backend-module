@@ -48,13 +48,13 @@ def split_audio_to_chunks(audio_details):
 
 
     if len(audio) <= 180000:
-        get_text_from_short_audio(audio, result_queue)
+        get_text_from_short_audio(audio, audio_details['folder_name'], result_queue)
 
     elif len(audio) > 180000 and len(audio) < 600000:
-        get_text_from_middle_audio(audio, result_queue)
+        get_text_from_middle_audio(audio, audio_details['folder_name'], result_queue)
 
     else:
-        get_text_from_long_audio(audio, result_queue)
+        get_text_from_long_audio(audio, audio_details['folder_name'], result_queue)
 
 
     try:
@@ -75,11 +75,11 @@ def split_audio_to_chunks(audio_details):
 
 # ===================================#
 
-def get_text_from_short_audio(audio, result_queue):
+def get_text_from_short_audio(audio, folder_name, result_queue):
     processes = []
     chunk_length = 15000
     for i in range(0, len(audio), chunk_length):
-        tmp_folder_name =  "/tmp/" +  str(uuid.uuid4())
+        tmp_folder_name =  "/tmp/" + folder_name + "/" +  str(uuid.uuid4())
 
         if not os.path.exists(tmp_folder_name):
             os.makedirs(tmp_folder_name)
@@ -95,12 +95,12 @@ def get_text_from_short_audio(audio, result_queue):
     for process in processes:
         process.join()
 
-def get_text_from_middle_audio(audio, result_queue):
+def get_text_from_middle_audio(audio, folder_name, result_queue):
     processes = []
     chunk_length = 15000
 
     for i in range(0, len(audio), chunk_length):
-        tmp_folder_name =  "/tmp/" +  str(uuid.uuid4())
+        tmp_folder_name =  "/tmp/" + folder_name + "/" +  str(uuid.uuid4())
 
         if not os.path.exists(tmp_folder_name):
             os.makedirs(tmp_folder_name)
@@ -128,7 +128,7 @@ def get_text_from_middle_audio(audio, result_queue):
     for process in processes:
         process.join()
 
-def get_text_from_long_audio(audio, result_queue):
+def get_text_from_long_audio(audio, folder_name, result_queue):
     processes = []
     chunk_length = 15000
     seven_minutes = 450000
@@ -144,7 +144,7 @@ def get_text_from_long_audio(audio, result_queue):
 
 
     for i in range(0, len(audio), chunk_length):
-        tmp_folder_name =  "/tmp/" +  str(uuid.uuid4())
+        tmp_folder_name =  "/tmp/" + folder_name + "/" +  str(uuid.uuid4())
 
         if not os.path.exists(tmp_folder_name):
             os.makedirs(tmp_folder_name)

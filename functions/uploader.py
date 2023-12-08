@@ -10,23 +10,22 @@ from instagrapi import Client
 from pydub import AudioSegment
 from pytube import YouTube
 
-import functions.tiktok_lib.python_tiktok as pyk
+import tiktok_lib.python_tiktok as pyk
 
 load_dotenv()
 
 
 def download_audio(source, video_url):
-    match source:
-        case "YouTube":
-            return download_audio_from_youtube(video_url)
-        case "Instagram":
-            return download_audio_from_instagram(video_url)
-        case "TikTok":
-            return download_audio_from_tiktok(video_url)
-        case "Local":
-            return upload_audio_from_local(video_url)
-        case _:
-            raise ValueError("Invalid source")
+    if source == "YouTube":
+        return download_audio_from_youtube(video_url)
+    elif source == "Instagram":
+        return download_audio_from_instagram(video_url)
+    elif source == "TikTok":
+        return download_audio_from_tiktok(video_url)
+    elif source == "Local":
+        return upload_audio_from_local(video_url)
+    else:
+        raise ValueError("Invalid source")
 
 
 # ------------------------------------#
@@ -54,8 +53,8 @@ def download_audio_from_youtube(video_url):
     video_details["published"] = ytube.publish_date
     video_details["type"] = "YouTube"
 
-    video = video_filter.download(output_path="/tmp")
-    video_details["audio_name"] = convert_mp4_to_wav(video)
+    video = video_filter.download(output_path="sent")
+    video_details["audio_name"], video_details["folder_name"] = convert_mp4_to_wav(video)
 
     return video_details
 
@@ -84,7 +83,7 @@ def download_audio_from_tiktok(video_url):
 
     video_mp4_name = f"{username}_{type}_{video_id}.mp4"
 
-    video_details["audio_name"] = convert_mp4_to_wav(video_mp4_name)
+    video_details["audio_name"], video_details["folder_name"] = convert_mp4_to_wav(video_mp4_name)
 
     return video_details
 
@@ -112,7 +111,7 @@ def download_audio_from_instagram(video_url):
     video_details["type"] = "TikTok"
 
     video = cl.video_download(video_data)
-    video_details["audio_name"] = convert_mp4_to_wav(video)
+    video_details["audio_name"], video_details["folder_name"] = convert_mp4_to_wav(video)
 
     return video_details
 
@@ -124,7 +123,7 @@ def download_audio_from_instagram(video_url):
 def upload_audio_from_local(video_path):
     video_details = {}
     video_details["type"] = "Local"
-    video_details["audio_name"] = convert_base64_mp4_to_wav(video_path)
+    video_details["audio_name"], video_details["folder_name"] = convert_base64_mp4_to_wav(video_path)
 
     return video_details
 
@@ -135,18 +134,31 @@ def upload_audio_from_local(video_path):
 
 
 def convert_mp4_to_wav(video_path):
-    wav_name = "/tmp/" + str(uuid.uuid4()) + ".wav"
+    folder_name = "/tmp/" + str(uuid.uuid4())
+
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+
+    wav_name = folder_name + "/" + str(uuid.uuid4()) + ".wav"
+
+
     audio = AudioSegment.from_file(video_path, format="mp4")
     audio = audio.set_channels(1)
     audio.export(wav_name, format="wav")
 
     if os.path.exists(video_path):
         os.remove(video_path)
-    return wav_name
+    return wav_name, folder_name
 
 
 def convert_base64_mp4_to_wav(video_path):
-    wav_name = "/tmp/" + str(uuid.uuid4()) + ".wav"
+    folder_name = "/tmp/" + str(uuid.uuid4())
+
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+
+    wav_name = folder_name + "/" + str(uuid.uuid4()) + ".wav"
+
     binary_audio = base64.b64decode(video_path)
     audio = AudioSegment.from_file(io.BytesIO(binary_audio), format="mp4")
     audio = audio.set_channels(1)
@@ -155,4 +167,4 @@ def convert_base64_mp4_to_wav(video_path):
     if os.path.exists(video_path):
         os.remove(video_path)
 
-    return wav_name
+    return wav_name, folder_name

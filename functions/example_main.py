@@ -39,6 +39,11 @@ if __name__ == "__main__":
     print("Rozpoczynam analize tekstową filmu...")
     audio_extend_details = att.split_audio_to_chunks(audio_details)
     sentiment_value = st.sentiment_analyze_via_azure(audio_extend_details)
+
+    print("")
+    print(audio_extend_details)
+    print("")
+
     print("Analiza tekstowa filmu zakończona")
     print(f"Film jest: {sentiment_value}")
     print("\n")
