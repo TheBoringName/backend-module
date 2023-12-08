@@ -30,14 +30,14 @@ def upload():
         "title": audio_details["title"] if "title" in audio_details else "Title not found",
         "source": request.json["source"],
         "url": "Local" if request.json["source"] == "Local" else request.json["url"],
-        "sentiment": sentiment_value
     }
     video_id = str(db.add_new_video(video_data))
     response = final_audio_details['gpt_response']
     result = {
         "video_id": video_id,
         "analysis": response,
-        "analysis_date": str(datetime.now())
+        "analysis_date": str(datetime.now()),
+        "sentiment": sentiment_value
     }
     db.create_result_record(parse_json(result))
     video_data.update(result)
