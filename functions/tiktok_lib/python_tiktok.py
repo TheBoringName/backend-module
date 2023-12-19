@@ -31,10 +31,9 @@ def get_tiktok_json(video_url):
                       headers=headers,
                       cookies=cookies,
                       timeout=20)
-
     cookies = tt.cookies
     soup = BeautifulSoup(tt.text, "html.parser")
-    tt_script = soup.find('script', attrs={'id':"SIGI_STATE"})
+    tt_script = soup.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
     try:
         tt_json = json.loads(tt_script.string)
     except AttributeError:
@@ -47,26 +46,11 @@ def save_tiktok(video_url):
         cookies = dill.load(file)
 
     tt_json = get_tiktok_json(video_url)
-    video_id = list(tt_json['ItemModule'].keys())[0]
-
     regex_url = re.findall(url_regex, video_url)[0]
-    if 'imagePost' in tt_json['ItemModule'][video_id]:
-        slidecount = 1
-        for slide in tt_json['ItemModule'][video_id]['imagePost']['images']:
-            video_fn = regex_url.replace('/', '_') + '_slide_' + str(slidecount) + '.jpeg'
-            tt_video_url = slide['imageURL']['urlList'][0]
-            headers['referer'] = 'https://www.tiktok.com/'
-            # include cookies with the video request
-            tt_video = requests.get(tt_video_url, allow_redirects=True, headers=headers, cookies=cookies)
-            with open(video_fn, 'wb') as fn:
-                fn.write(tt_video.content)
-            slidecount += 1
-    else:
-        regex_url = re.findall(url_regex, video_url)[0]
-        video_fn = regex_url.replace('/', '_') + '.mp4'
-        tt_video_url = tt_json['ItemModule'][video_id]['video']['downloadAddr']
-        headers['referer'] = 'https://www.tiktok.com/'
-        # include cookies with the video request
-        tt_video = requests.get(tt_video_url, allow_redirects=True, headers=headers, cookies=cookies)
+    video_fn = regex_url.replace('/', '_') + '.mp4'
+    tt_video_url = tt_json["__DEFAULT_SCOPE__"]['webapp.video-detail']['itemInfo']['itemStruct']['video']['downloadAddr']
+    headers['referer'] = 'https://www.tiktok.com/'
+    # include cookies with the video request
+    tt_video = requests.get(tt_video_url, allow_redirects=True, headers=headers, cookies=cookies)
     with open(video_fn, 'wb') as fn:
-        fn.write(tt_video.content)
+            fn.write(tt_video.content)

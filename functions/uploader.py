@@ -77,9 +77,9 @@ def download_audio_from_tiktok(video_url):
     pyk.save_tiktok(video_url)
     video_info = pyk.get_tiktok_json(video_url)
 
-    video_details["tags"] = re.findall(r'#\w+', video_info["ItemModule"][video_id]["desc"])
+    video_details["tags"] = re.findall(r'#\w+', video_info["__DEFAULT_SCOPE__"]['webapp.video-detail']['itemInfo']['itemStruct']["desc"])
     video_details["creator"] = username.replace("@", "")
-    video_details["title"] = re.sub(r'#\w+', '', video_info["ItemModule"][video_id]["desc"]).strip()
+    video_details["title"] = re.sub(r'#\w+', '', video_info["__DEFAULT_SCOPE__"]['webapp.video-detail']['itemInfo']['itemStruct']["desc"]).strip()
     video_details["type"] = "Instagram"
 
     video_mp4_name = f"{username}_{type}_{video_id}.mp4"
